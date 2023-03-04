@@ -1,3 +1,5 @@
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
+
 Wc Price Badge
 
 Plugin ini digunakan untuk menandai harga dengan badge text.
