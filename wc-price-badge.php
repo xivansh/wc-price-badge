@@ -4,8 +4,7 @@
  * Plugin URI:          https://ivans.my.id
  * Description:         Add Badge Name after price
  * Author:              Ivan S Nawawi
- * License:             GPL v2 or later
- * License URI:         https://www.gnu.org/licenses/gpl-2.0.html
+ * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain:         fs-email-helper
  * Domain Path:         /languages
  * Version:             1.0.1
@@ -25,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
         $product_id = $post->ID;
         $product = wc_get_product( $product_id );             
 
-        $options = get_option( 'badge_price_options' );
+        $options = get_option('badge_price_options');
 
         $start = $options["prefix_field_start"];
         $end = $options["prefix_field_end"]; 
