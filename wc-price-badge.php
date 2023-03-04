@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name:         WC Price Badge 
- * Plugin URI:          https://example.com/test-plugin
+ * Plugin URI:          https://ivans.my.id
  * Description:         Add Badge Name after price
- * Author:              Ivan Nawawi
+ * Author:              Ivan S Nawawi
  * Author URI:          https://ivans.my.id
  * License:             GPL v2 or later
  * License URI:         https://www.gnu.org/licenses/gpl-2.0.html
