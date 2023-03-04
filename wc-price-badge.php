@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:         WC Price Badge(new)
+ * Plugin Name:         WC Price Badge 
  * Plugin URI:          https://example.com/test-plugin
  * Description:         Add Badge Name after price
  * Author:              Ivan Nawawi
@@ -222,25 +222,25 @@ if ( ! defined( 'ABSPATH' ) ) {
     function prefix_field_color_cb($args) {
         $options = get_option('badge_price_options');
         ?>
-            <input class="regular-text" placeholder="e.g. #ffa700 or Yellow" type="text" id="<?php echo esc_attr($args['label_for']); ?>" name="badge_price_options[<?php echo esc_attr($args['label_for']); ?>]" value="<?php echo esc_attr($options[$args['label_for']] ?? ''); ?>">
+            <input class="regular-text" placeholder="e.g. #ffa700 or Yellow" style="width: 5%;" type="color" id="<?php echo esc_attr($args['label_for']); ?>" name="badge_price_options[<?php echo esc_attr($args['label_for']); ?>]" value="<?php echo esc_attr($options[$args['label_for']] ?? ''); ?>">
         <?php
     }
 
     function prefix_field_tag_cb($args) {
         $options = get_option('badge_price_options');
         $terms = get_terms('product_tag');
+        $tag_select = $options[$args['label_for']] ?? $terms;
     ?>
         <select multiple="multiple" id="example-select" name="badge_price_options[<?php echo esc_attr($args['label_for']); ?>][]">
             <option value="">-- Choose Tag --</option>
             <?php
                 $terms = get_terms('product_tag'); 
-
                 ?>
                     <?php 
                         if ( ! empty( $terms ) && ! is_wp_error( $terms ) ){
                         foreach( $terms as $term ) { ?>
                         <?php 
-                        $select = in_array($term->term_id, $options[$args['label_for']]) ? 'selected="selected"' : ''; 
+                        $select = in_array($term->term_id, $tag_select) ? 'selected="selected"' : ''; 
                         ?>
                             <option value="<?php echo $term->term_id; ?>" <?php echo $select; ?> > <?php echo $term->name; ?></option>
                             <?php 
@@ -273,7 +273,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     function prefix_options_page() {
         add_menu_page(
             'WC Price Badge',
-            'WC Price Badge Options',
+            'Price Badge Options',
             'manage_options',
             'prefix',
             'prefix_options_page_html'
