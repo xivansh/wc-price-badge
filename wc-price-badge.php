@@ -4,7 +4,6 @@
  * Plugin URI:          https://ivans.my.id
  * Description:         Add Badge Name after price
  * Author:              Ivan S Nawawi
- * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain:         fs-email-helper
  * Domain Path:         /languages
  * Version:             1.0.1
