@@ -1,6 +1,15 @@
-Wc Price Badge
+=== Price Badge ===
+Contributors: LuxTeam
+Donate link: https://ivans.my.id
+Tags: pricebadge
+Requires at least: 1.0.0
+Tested up to: 6.1
+Stable tag: 6.3.1
+Requires PHP: 7.3
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Plugin ini digunakan untuk menandai harga dengan badge text.
+Wc Price Badge : This plugin is used to mark prices with badge text.
 
 Isi Form 
 - Enable Badge > Centang untuk menampilkan Price Badge.
