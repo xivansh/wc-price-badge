@@ -5,7 +5,7 @@
  * Description:         Add Badge Name after price
  * Author:              Ivan S Nawawi
  * Domain Path:         /languages
- * Version:             1.0.1
+ * Version:             1.0.0
  * Requires at least:   5.5
  * Requires PHP:        7.3
  * License: GPLv2 or later
