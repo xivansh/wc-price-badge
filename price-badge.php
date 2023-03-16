@@ -4,6 +4,7 @@
  * Plugin URI:          https://ivans.my.id
  * Description:         Add Badge Name after price
  * Author:              Ivan S Nawawi
+ * Text Domain:         price-badge
  * Domain Path:         /languages
  * Version:             1.0.0
  * Requires at least:   5.5
@@ -36,8 +37,6 @@
             $now = strtotime(date("Y-m-d"));
 
             $enable = $options["prefix_field_enable"] ?? '';
-            
-            $tag = $options["prefix_field_enable"];
             
             if ( $enable == 1 ) {
                 if ( $now >= $time_start && $now <= $time_end )
@@ -239,9 +238,9 @@
                         foreach( $terms as $term ) { 
                     ?>
                         <?php 
-                            $select = in_array($term->term_id, $tag_select) ? 'selected="selected"' : ''; 
+                            $select = in_array( $term->term_id, $tag_select ) ? 'selected="selected"' : ''; 
                         ?>
-                            <option value="<?php echo $term->term_id; ?>" <?php echo $select; ?> > <?php echo esc_html($term->name); ?></option>
+                            <option value="<?php echo esc_attr( $term->term_id ); ?>" <?php echo $select; ?> > <?php echo esc_html($term->name); ?></option>
                         <?php 
                             } 
                         }
@@ -257,16 +256,12 @@
 
         add_action( 'admin_enqueue_scripts', 'admin_enqueue_scripts_callback' );
         function admin_enqueue_scripts_callback(){
-
             //Add the Select2 CSS file
             wp_enqueue_style( 'select2-css', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css', array(), '4.1.0-rc.0');
-        
             //Add the Select2 JavaScript file
             wp_enqueue_script( 'select2-js', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', 'jquery', '4.1.0-rc.0');
-        
             //Add a JavaScript file to initialize the Select2 elements
             wp_enqueue_script( 'select2-init', '/wp-content/plugins/select-2-tutorial/select2-init.js', 'jquery', '4.1.0-rc.0');
-        
         }
 
         function prefix_options_page() {
@@ -278,6 +273,7 @@
                 'prefix_options_page_html'
         );
         }
+        
         add_action('admin_menu', 'prefix_options_page');
 
         function prefix_options_page_html() {

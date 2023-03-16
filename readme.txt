@@ -3,7 +3,7 @@ Contributors: ivansah
 Donate link: https://ivans.my.id
 Tags: pricebadge
 Requires at least: 1.0.0
-Tested up to: 6.1
+Tested up to: 1.0
 Stable tag: 1.0.0
 Requires PHP: 7.3
 License: GPLv2 or later
