@@ -70,7 +70,7 @@
         add_settings_field(
             'prefix_field_enable',
             __('Enable Badge', 'prefix'),
-            'prefix_field_enable_cb',
+            'enable_cb',
             'prefix',
             'prefix_section_info',
             array(
@@ -82,7 +82,7 @@
             add_settings_field(
                 'prefix_field_start',
                 __('Start', 'prefix'),
-                'prefix_field_start_cb',
+                'start_cb',
                 'prefix',
                 'prefix_section_info',
                 array(
@@ -94,7 +94,7 @@
             add_settings_field(
                 'prefix_field_end',
                 __('End', 'prefix'),
-                'prefix_field_end_cb',
+                'end_cb',
                 'prefix',
                 'prefix_section_info',
                 array(
@@ -106,7 +106,7 @@
             add_settings_field(
                 'prefix_field_name',
                 __('Badge Name', 'prefix'),
-                'prefix_field_name_cb',
+                'name_cb',
                 'prefix',
                 'prefix_section_info',
                 array(
@@ -118,7 +118,7 @@
             add_settings_field(
                 'prefix_field_color',
                 __('Badge Color', 'prefix'),
-                'prefix_field_color_cb',
+                'color_cb',
                 'prefix',
                 'prefix_section_info',
                 array(
@@ -130,7 +130,7 @@
             add_settings_field(
                 'prefix_field_tag',
                 __('Tag Product', 'prefix'),
-                'prefix_field_tag_cb',
+                'tag_cb',
                 'prefix',
                 'prefix_section_info',
                 array(
@@ -183,7 +183,7 @@
             <?php
         }
 
-        function prefix_field_enable_cb( $args ) 
+        function enable_cb( $args ) 
         {
             $options = get_option('badge_price_options');
             $enable = $options[$args['label_for']]  ?? '';
@@ -193,7 +193,7 @@
             
         }
 
-        function prefix_field_start_cb( $args ) 
+        function start_cb( $args ) 
         {
             $options = get_option('badge_price_options');
             ?>
@@ -201,7 +201,7 @@
             <?php
         }
 
-        function prefix_field_end_cb( $args ) 
+        function end_cb( $args ) 
         {
             $options = get_option('badge_price_options');
             ?>
@@ -209,7 +209,7 @@
             <?php
         }
 
-        function prefix_field_name_cb( $args ) 
+        function name_cb( $args ) 
         {
             $options = get_option('badge_price_options');
             ?>
@@ -217,7 +217,7 @@
             <?php
         }
 
-        function prefix_field_color_cb( $args ) 
+        function color_cb( $args ) 
         {
             $options = get_option('badge_price_options');
             ?>
@@ -225,7 +225,7 @@
             <?php
         }
 
-        function prefix_field_tag_cb( $args ) 
+        function tag_cb( $args ) 
         {
             $options = get_option('badge_price_options');
             $terms = get_terms('product_tag');
@@ -245,8 +245,8 @@
                         ?>
                             <option value="<?php echo esc_attr( $term->term_id ); ?>" <?php echo $select; ?> > <?php echo esc_html($term->name); ?></option>
                         <?php 
-                            } 
-                        }
+                        } 
+                    }
             ?>
                 </select>
                     <script>
@@ -258,6 +258,7 @@
         }
 
         add_action( 'admin_enqueue_scripts', 'admin_enqueue_scripts_callback' );
+
         function admin_enqueue_scripts_callback()
         {
             //Add the Select2 CSS file
@@ -268,20 +269,20 @@
             wp_enqueue_script( 'select2-init', '/wp-content/plugins/select-2-tutorial/select2-init.js', 'jquery', '4.1.0-rc.0');
         }
 
-        function prefix_options_page() 
+        function options_page() 
         {
             add_menu_page(
                 'Price Badge for WooCommerce',
                 'Price Badge Options',
                 'manage_options',
                 'prefix',
-                'prefix_options_page_html'
-        );
+                'page_html'
+            );
         }
         
-        add_action('admin_menu', 'prefix_options_page');
+        add_action('admin_menu', 'options_page');
 
-        function prefix_options_page_html() 
+        function page_html() 
         {
             if ( !current_user_can('manage_options') ) {
                 return;
@@ -303,6 +304,6 @@
                         ?>
                     </form>
                 </div>
-                <?php
+            <?php
         }
 ?>
