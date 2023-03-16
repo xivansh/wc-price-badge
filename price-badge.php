@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:         Price Badge 
+ * Plugin Name:         Price Badge for WooCommerce
  * Plugin URI:          https://ivans.my.id
  * Description:         Add Badge Name after price
  * Author:              Ivan S Nawawi
@@ -36,7 +36,7 @@
             $time_end =   strtotime($end);
             $now = strtotime(date("Y-m-d"));
 
-            $enable = $options["prefix_field_enable"] ?? '';
+            $enable = $options["prefix_field_enable"] ?? '';      
             
             if ( $enable == 1 ) {
                 if ( $now >= $time_start && $now <= $time_end )
@@ -150,20 +150,17 @@
 
             if (empty($data['prefix_field_name'])) {
                 add_settings_error( 'prefix_messages', 'prefix_message', __('Name is required', 'prefix'), 'error' );
-
                 $has_errors = true;
             }
 
 
             if (empty($data['prefix_field_start'])) {
                 add_settings_error( 'prefix_messages', 'prefix_message', __('Start Date is required', 'prefix'), 'error' );
-
                 $has_errors = true;
             }
 
             if (empty($data['prefix_field_end'])) {
                 add_settings_error( 'prefix_messages', 'prefix_message', __('End Date is required', 'prefix'), 'error' );
-
                 $has_errors = true;
             }
 
@@ -186,7 +183,8 @@
             <?php
         }
 
-        function prefix_field_enable_cb( $args ) {
+        function prefix_field_enable_cb( $args ) 
+        {
             $options = get_option('badge_price_options');
             $enable = $options[$args['label_for']]  ?? '';
             ?>
@@ -195,35 +193,40 @@
             
         }
 
-        function prefix_field_start_cb( $args ) {
+        function prefix_field_start_cb( $args ) 
+        {
             $options = get_option('badge_price_options');
             ?>
                 <input class="regular-text" type="date" id="<?php echo esc_attr($args['label_for']); ?>" name="badge_price_options[<?php echo esc_attr($args['label_for']); ?>]" value="<?php echo esc_attr($options[$args['label_for']] ?? ''); ?>">
             <?php
         }
 
-        function prefix_field_end_cb( $args ) {
+        function prefix_field_end_cb( $args ) 
+        {
             $options = get_option('badge_price_options');
             ?>
                 <input class="regular-text" type="date" id="<?php echo esc_attr($args['label_for']); ?>" name="badge_price_options[<?php echo esc_attr($args['label_for']); ?>]" value="<?php echo esc_attr($options[$args['label_for']] ?? ''); ?>">
             <?php
         }
 
-        function prefix_field_name_cb( $args ) {
+        function prefix_field_name_cb( $args ) 
+        {
             $options = get_option('badge_price_options');
             ?>
                 <input class="regular-text" placeholder="e.g. Valentine Price" type="text" id="<?php echo esc_attr($args['label_for']); ?>" name="badge_price_options[<?php echo esc_attr($args['label_for']); ?>]" value="<?php echo esc_attr($options[$args['label_for']] ?? ''); ?>">
             <?php
         }
 
-        function prefix_field_color_cb( $args ) {
+        function prefix_field_color_cb( $args ) 
+        {
             $options = get_option('badge_price_options');
             ?>
                 <input class="regular-text" placeholder="e.g. #ffa700 or Yellow" style="width: 5%;" type="color" id="<?php echo esc_attr($args['label_for']); ?>" name="badge_price_options[<?php echo esc_attr($args['label_for']); ?>]" value="<?php echo esc_attr($options[$args['label_for']] ?? ''); ?>">
             <?php
         }
 
-        function prefix_field_tag_cb( $args ) {
+        function prefix_field_tag_cb( $args ) 
+        {
             $options = get_option('badge_price_options');
             $terms = get_terms('product_tag');
             $tag_select = $options[$args['label_for']] ?? $terms;
@@ -255,7 +258,8 @@
         }
 
         add_action( 'admin_enqueue_scripts', 'admin_enqueue_scripts_callback' );
-        function admin_enqueue_scripts_callback(){
+        function admin_enqueue_scripts_callback()
+        {
             //Add the Select2 CSS file
             wp_enqueue_style( 'select2-css', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css', array(), '4.1.0-rc.0');
             //Add the Select2 JavaScript file
@@ -264,9 +268,10 @@
             wp_enqueue_script( 'select2-init', '/wp-content/plugins/select-2-tutorial/select2-init.js', 'jquery', '4.1.0-rc.0');
         }
 
-        function prefix_options_page() {
+        function prefix_options_page() 
+        {
             add_menu_page(
-                'Price Badge',
+                'Price Badge for WooCommerce',
                 'Price Badge Options',
                 'manage_options',
                 'prefix',
@@ -276,7 +281,8 @@
         
         add_action('admin_menu', 'prefix_options_page');
 
-        function prefix_options_page_html() {
+        function prefix_options_page_html() 
+        {
             if ( !current_user_can('manage_options') ) {
                 return;
             }
