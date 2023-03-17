@@ -241,7 +241,7 @@
                         <?php 
                             $select = in_array( $term->term_id, $tag_select ) ? 'selected="selected"' : ''; 
                         ?>
-                            <option value="<?php echo esc_attr( $term->term_id ); ?>" <?php echo $select; ?> > <?php echo esc_html($term->name); ?></option>
+                            <option value="<?php echo esc_html( $term->term_id ); ?>" <?php echo $select; ?> > <?php echo esc_html($term->name); ?></option>
                         <?php 
                         } 
                     }
@@ -260,9 +260,9 @@
         function scripts_callback()
         {
             //Add the Select2 CSS file
-            wp_enqueue_style( 'select2-css', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css', array(), '4.1.0-rc.0');
+            wp_enqueue_style( 'select2-custom-css', '/wp-content/plugins/wc-price-badge/select2/css/select2.min.css', array());
             //Add the Select2 JavaScript file
-            wp_enqueue_script( 'select2-js', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', 'jquery', '4.1.0-rc.0');
+            wp_enqueue_script('select2-custom-js', '/wp-content/plugins/wc-price-badge/select2/js/select2.min.js', array('jquery'));
         }
 
         function options_page() 
