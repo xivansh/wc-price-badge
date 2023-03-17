@@ -23,21 +23,19 @@
             global $post;
             
             $product_id = $post->ID;
-            $product = wc_get_product( $product_id );             
+            $product = wc_get_product( $product_id );     
 
             $options = get_option('badge_price_options');
 
             $start = $options["prefix_field_start"];
             $end = $options["prefix_field_end"]; 
 
-            $cek =  $options["prefix_field_tag"];
-
             $time_start  = strtotime($start);
             $time_end =   strtotime($end);
             $now = strtotime(date("Y-m-d"));
 
             $enable = $options["prefix_field_enable"] ?? '';      
-            
+
             if ( $enable == 1 ) {
                 if ( $now >= $time_start && $now <= $time_end )
                 {
@@ -257,16 +255,14 @@
             <?php
         }
 
-        add_action( 'admin_enqueue_scripts', 'admin_enqueue_scripts_callback' );
+        add_action( 'admin_enqueue_scripts', 'scripts_callback' );
 
-        function admin_enqueue_scripts_callback()
+        function scripts_callback()
         {
             //Add the Select2 CSS file
             wp_enqueue_style( 'select2-css', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css', array(), '4.1.0-rc.0');
             //Add the Select2 JavaScript file
             wp_enqueue_script( 'select2-js', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', 'jquery', '4.1.0-rc.0');
-            //Add a JavaScript file to initialize the Select2 elements
-            wp_enqueue_script( 'select2-init', '/wp-content/plugins/select-2-tutorial/select2-init.js', 'jquery', '4.1.0-rc.0');
         }
 
         function options_page() 
