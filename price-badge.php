@@ -260,9 +260,9 @@
         function scripts_callback()
         {
             //Add the Select2 CSS file
-            wp_enqueue_style( 'select2-custom-css', '/wp-content/plugins/wc-price-badge/select2/css/select2.min.css', array());
+            wp_enqueue_style( 'select2-custom-css','/wp-content/plugins/wc-price-badge/assets/select2/css/select2.min.css', array());
             //Add the Select2 JavaScript file
-            wp_enqueue_script('select2-custom-js', '/wp-content/plugins/wc-price-badge/select2/js/select2.min.js', array('jquery'));
+            wp_enqueue_script('select2-custom-js', '/wp-content/plugins/wc-price-badge/assets/select2/js/select2.min.js', array('jquery'));
         }
 
         function options_page() 
