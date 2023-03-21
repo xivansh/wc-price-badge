@@ -17,8 +17,8 @@
         exit;
     }
 
-        add_filter( 'woocommerce_get_price_html','badge_after_price' );
-        function badge_after_price( $price )
+        add_filter( 'woocommerce_get_price_html','bap_display_front' );
+        function bap_display_front( $price )
         {
             global $post;
             
@@ -53,34 +53,34 @@
             }
         }
 
-        function prefix_settings_init() {
+        function pb_field_validation() {
             register_setting('prefix', 'badge_price_options', [
                 'type'              => 'array',
-                'sanitize_callback' => 'prefix_sanitize_options',
+                'sanitize_callback' => 'pb_message_validation',
             ]);
 
             add_settings_section(
                 'prefix_section_info',
-                __('', 'prefix'), 'prefix_section_info_callback',
+                __('', 'prefix'), 'pb_info_callback',
                 'prefix'
-        );
+            );
 
-        add_settings_field(
-            'prefix_field_enable',
-            __('Enable Badge', 'prefix'),
-            'enable_cb',
-            'prefix',
-            'prefix_section_info',
-            array(
-                'label_for' => 'prefix_field_enable',
-                'class'     => 'prefix_row',
-            )
-        );
+            add_settings_field(
+                'prefix_field_enable',
+                __('Enable Badge', 'prefix'),
+                'pb_enable_cb',
+                'prefix',
+                'prefix_section_info',
+                array(
+                    'label_for' => 'prefix_field_enable',
+                    'class'     => 'prefix_row',
+                )
+            );
             
             add_settings_field(
                 'prefix_field_start',
                 __('Start', 'prefix'),
-                'start_cb',
+                'pb_start_cb',
                 'prefix',
                 'prefix_section_info',
                 array(
@@ -92,7 +92,7 @@
             add_settings_field(
                 'prefix_field_end',
                 __('End', 'prefix'),
-                'end_cb',
+                'pb_end_cb',
                 'prefix',
                 'prefix_section_info',
                 array(
@@ -104,7 +104,7 @@
             add_settings_field(
                 'prefix_field_name',
                 __('Badge Name', 'prefix'),
-                'name_cb',
+                'pb_name_cb',
                 'prefix',
                 'prefix_section_info',
                 array(
@@ -116,7 +116,7 @@
             add_settings_field(
                 'prefix_field_color',
                 __('Badge Color', 'prefix'),
-                'color_cb',
+                'pb_color_cb',
                 'prefix',
                 'prefix_section_info',
                 array(
@@ -128,7 +128,7 @@
             add_settings_field(
                 'prefix_field_tag',
                 __('Tag Product', 'prefix'),
-                'tag_cb',
+                'pb_tag_cb',
                 'prefix',
                 'prefix_section_info',
                 array(
@@ -139,9 +139,9 @@
 
 
         }
-        add_action('admin_init', 'prefix_settings_init');
+        add_action('admin_init', 'pb_field_validation');
 
-        function prefix_sanitize_options( $data )
+        function pb_message_validation( $data )
         {
             $old_options = get_option( 'badge_price_options' );
             $has_errors = false;
@@ -150,7 +150,6 @@
                 add_settings_error( 'prefix_messages', 'prefix_message', __('Name is required', 'prefix'), 'error' );
                 $has_errors = true;
             }
-
 
             if (empty($data['prefix_field_start'])) {
                 add_settings_error( 'prefix_messages', 'prefix_message', __('Start Date is required', 'prefix'), 'error' );
@@ -167,6 +166,11 @@
                 $has_errors = true;
             }
 
+            if (empty($data['prefix_field_tag'])) {
+                add_settings_error( 'prefix_messages', 'prefix_message', __('Product Tag is required', 'prefix'), 'error' );
+                $has_errors = true;
+            }
+
             if ($has_errors) {
                 $data = $old_options;
             }
@@ -174,14 +178,14 @@
             return $data;
         }
 
-        function prefix_section_info_callback( $args ) 
+        function pb_info_callback( $args ) 
         {
             ?>
                 <p id="<?php echo esc_attr( $args['id']); ?>"><?php esc_html_e( 'Please fill in the form correctly', 'prefix' ); ?></p>
             <?php
         }
 
-        function enable_cb( $args ) 
+        function pb_enable_cb( $args ) 
         {
             $options = get_option('badge_price_options');
             $enable = $options[$args['label_for']]  ?? '';
@@ -191,7 +195,7 @@
             
         }
 
-        function start_cb( $args ) 
+        function pb_start_cb( $args ) 
         {
             $options = get_option('badge_price_options');
             ?>
@@ -199,7 +203,7 @@
             <?php
         }
 
-        function end_cb( $args ) 
+        function pb_end_cb( $args ) 
         {
             $options = get_option('badge_price_options');
             ?>
@@ -207,7 +211,7 @@
             <?php
         }
 
-        function name_cb( $args ) 
+        function pb_name_cb( $args ) 
         {
             $options = get_option('badge_price_options');
             ?>
@@ -215,7 +219,7 @@
             <?php
         }
 
-        function color_cb( $args ) 
+        function pb_color_cb( $args ) 
         {
             $options = get_option('badge_price_options');
             ?>
@@ -223,7 +227,7 @@
             <?php
         }
 
-        function tag_cb( $args ) 
+        function pb_tag_cb( $args ) 
         {
             $options = get_option('badge_price_options');
             $terms = get_terms('product_tag');
@@ -255,30 +259,28 @@
             <?php
         }
 
-        add_action( 'admin_enqueue_scripts', 'scripts_callback' );
+        add_action( 'admin_enqueue_scripts', 'pb_scripts_callback' );
 
-        function scripts_callback()
-        {
-            //Add the Select2 CSS file
-            wp_enqueue_style( 'select2-custom-css','/wp-content/plugins/wc-price-badge/assets/select2/css/select2.min.css', array());
-            //Add the Select2 JavaScript file
-            wp_enqueue_script('select2-custom-js', '/wp-content/plugins/wc-price-badge/assets/select2/js/select2.min.js', array('jquery'));
+        function pb_scripts_callback()
+        { 
+            wp_enqueue_style('select2-custom-css', plugins_url('/assets/select2/css/select2.min.css', __FILE__), array());
+            wp_enqueue_script('select2-custom-js', plugins_url('/assets/select2/js/select2.min.js', __FILE__), array('jquery'));
         }
 
-        function options_page() 
+        function pb_backend_page() 
         {
             add_menu_page(
                 'Price Badge for WooCommerce',
                 'Price Badge Options',
                 'manage_options',
                 'prefix',
-                'page_html'
+                'pb_save_page'
             );
         }
         
-        add_action('admin_menu', 'options_page');
+        add_action('admin_menu', 'pb_backend_page');
 
-        function page_html() 
+        function pb_save_page() 
         {
             if ( !current_user_can('manage_options') ) {
                 return;
