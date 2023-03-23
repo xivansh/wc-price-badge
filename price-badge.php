@@ -57,8 +57,8 @@
         }
 
 
-        if(!function_exists('pbge_field_validation')){
-            function pbge_field_validation() {
+        if(!function_exists('pbdge_field_validation')){
+            function pbdge_field_validation() {
                 register_setting('prefix', 'badge_price_options', [
                     'type'              => 'array',
                     'sanitize_callback' => 'pbdge_message_validation',
@@ -146,7 +146,7 @@
             }
         }
 
-        add_action('admin_init', 'pbge_field_validation');
+        add_action('admin_init', 'pbdge_field_validation');
 
         if (!function_exists('pbdge_message_validation')) {  
             function pbdge_message_validation( $data )
