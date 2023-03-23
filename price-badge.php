@@ -97,7 +97,7 @@
                 add_settings_field(
                     'prefix_field_end',
                     __('End', 'prefix'),
-                    'pb_end_cb',
+                    'pbdge_end_cb',
                     'prefix',
                     'prefix_section_info',
                     array(
@@ -218,7 +218,7 @@
         }
 
         if (!function_exists('pbdge_end_cb')) {
-            function pb_end_cb( $args ) 
+            function pbdge_end_cb( $args ) 
             {
                 $options = get_option('badge_price_options');
                 ?>
