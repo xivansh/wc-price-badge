@@ -17,10 +17,10 @@
         exit;
     }
 
-        add_filter( 'woocommerce_get_price_html','baps_display_front' );
+        add_filter( 'woocommerce_get_price_html','pbdge_front_display' );
 
-        if(!function_exists('baps_display_front')){
-            function baps_display_front( $price )
+        if(!function_exists('pbdge_front_display')){
+            function pbdge_front_display( $price )
             {
                 global $post;
                 
