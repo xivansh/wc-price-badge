@@ -10,7 +10,7 @@ License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 
-Price Badge : This plugin is used to mark prices with badge text.
+Price Badge For WooCommerce : This plugin is used to mark prices with badge text.
 
 Isi Form 
 - Enable Badge > Centang untuk menampilkan Price Badge.
