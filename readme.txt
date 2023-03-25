@@ -1,4 +1,4 @@
-=== Price Badge ===
+=== Price Badge For WooCommerce ===
 Contributors: ivansah
 Donate link: https://ivans.my.id
 Tags: pricebadge
