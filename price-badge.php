@@ -3,7 +3,7 @@
  * Plugin Name:         Price Badge for WooCommerce
  * Plugin URI:          https://ivans.my.id
  * Description:         Add Badge Name after price
- * Author:              Ivan Luxodev
+ * Author:              Ivan Lux
  * Text Domain:         price-badge
  * Domain Path:         /languages
  * Version:             1.0.0
@@ -23,7 +23,6 @@
             function pbdge_front_display( $price )
             {
                 global $post;
-                
                 
                 $product_id = $post->ID;
                 $product = wc_get_product( $product_id );     
