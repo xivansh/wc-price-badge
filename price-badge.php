@@ -6,7 +6,7 @@
  * Author:              Ivan Lux
  * Text Domain:         price-badge
  * Domain Path:         /languages
- * Version:             1.0.0
+ * Version:             1.0.1
  * Requires at least:   5.5
  * Requires PHP:        7.3
  * License: GPLv2 or later
@@ -26,24 +26,44 @@
                 
                 $product_id = $post->ID;
                 $product = wc_get_product( $product_id );     
-    
-                $options = get_option('badge_price_options');
-    
+                $options = get_option('badge_price_options'); 
+
                 $start = $options["prefix_field_start"] ?? '';
                 $end = $options["prefix_field_end"] ?? ''; 
-    
+
                 $time_start  = strtotime($start);
                 $time_end =   strtotime($end);
                 $now = strtotime(date("Y-m-d"));
     
-                $enable = $options["prefix_field_enable"] ?? '';      
-    
+                $enable = $options["prefix_field_enable"] ?? '';  
+                
+                $image_url = $options["prefix_field_image"] ?? '';
+
                 if ( $enable == 1 ) {
                     if ( $now >= $time_start && $now <= $time_end )
                     {
                         if( array_intersect($options["prefix_field_tag"], $product->get_tag_ids()) ) {      
                             $text_to_add_after_price  = ' <sup class="text-red" style="color:'.$options["prefix_field_color"].'">'.$options["prefix_field_name"].'</sup>' ; 
-                            return $price .   $text_to_add_after_price;
+                            if ($options["prefix_field_type"] == 'images') {
+                                return '
+                                <div class="container">
+                                   <table style="border: none">
+                                        <thead style="border: none">
+                                            <tr style="border: none">
+                                                <td style="border: none;  width: 10px; padding: 0px">
+                                                    '.$price.'
+                                                </td>
+                                                <td style="border: none">
+                                                    <img src="'.$image_url.'" style="max-width: 30px;" />
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                                ';
+                            } elseif($options["prefix_field_type"] == 'textbox') {
+                                return $price . $text_to_add_after_price;
+                            }
                         } else {
                             return $price;
                         }  
@@ -105,16 +125,40 @@
                         'class'     => 'prefix_row',
                     )
                 );
+
+                add_settings_field(
+                    'prefix_field_type',
+                    __('Badge Type', 'prefix'),
+                    'pbdge_type_cb',
+                    'prefix',
+                    'prefix_section_info',
+                    array(
+                        'label_for' => 'prefix_field_type',
+                        'class'     => 'prefix_row',
+                    )
+                );
+
+                add_settings_field(
+                    'prefix_field_image',
+                    __('Badge Image', 'prefix'),
+                    'pbdge_image_cb',
+                    'prefix',
+                    'prefix_section_info',
+                    array(
+                        'label_for' => 'prefix_field_image',
+                        'class'     => 'prefix_row badge_image_row',
+                    )
+                );
     
                 add_settings_field(
                     'prefix_field_name',
-                    __('Badge Name', 'prefix'),
+                    __('Badge Text', 'prefix'),
                     'pbdge_name_cb',
                     'prefix',
                     'prefix_section_info',
                     array(
                         'label_for' => 'prefix_field_name',
-                        'class'     => 'prefix_row',
+                        'class'     => 'prefix_row badge_text_row',
                     )
                 );
     
@@ -126,7 +170,7 @@
                     'prefix_section_info',
                     array(
                         'label_for' => 'prefix_field_color',
-                        'class'     => 'prefix_row',
+                        'class'     => 'prefix_row badge_text_row',
                     )
                 );
     
@@ -153,11 +197,6 @@
             {
                 $old_options = get_option( 'badge_price_options' );
                 $has_errors = false;
-    
-                if (empty($data['prefix_field_name'])) {
-                    add_settings_error( 'prefix_messages', 'prefix_message', __('Name is required', 'prefix'), 'error' );
-                    $has_errors = true;
-                }
     
                 if (empty($data['prefix_field_start'])) {
                     add_settings_error( 'prefix_messages', 'prefix_message', __('Start Date is required', 'prefix'), 'error' );
@@ -227,22 +266,101 @@
             }    
         }
 
+        if(!function_exists('pbdge_type_cb')){
+            function pbdge_type_cb( $args )
+            {
+                $options = get_option('badge_price_options');
+                $type = $options[$args['label_for']] ?? '';
+                ?>
+                    <select name="badge_price_options[<?php echo esc_attr($args['label_for'] ?? ''); ?>]" id="type" style="width:220px;">
+                        <option>-- Choose Badge Type First --</option>
+                        <option name="images" value="images" <?php if ( $type  == 'images') { echo 'selected="selected"'; } ?>>Image</option>
+                        <option name="textbox" value="textbox" <?php if ( $type  == 'textbox') { echo 'selected="selected"'; } ?>>Text</option>
+                    </select> 
+                    <script>
+                        jQuery(document).ready(function($) {
+                            $('.badge_image_row').hide();
+                            $('.badge_text_row').hide();
+                            $('#type').change(function(){
+                                if($('#type').val() == 'images') {
+                                    $('.badge_image_row').show(); 
+                                } else {
+                                    $('.badge_image_row').hide(); 
+                                } 
+                                if($('#type').val() == 'textbox') {
+                                    $('.badge_text_row').show();
+                                } else {
+                                    $('.badge_text_row').hide();
+                                } 
+                            });
+                        });
+                    </script>
+                <?php 
+            }
+        }
+
+        if (!function_exists('pbdge_image_cb')) {
+            function pbdge_image_cb( $args ) 
+            {
+                $options = get_option('badge_price_options');
+                $image_id       = esc_attr__( $args['label_for']);
+                $hasImage       = false;
+                $image          = wp_get_attachment_image_src( $image_id );
+                $image_url      = $image;
+
+                if (!is_null($image_id) && $image_id !== "" && $image_id > 0) {
+                    $hasImage   = true;
+                }
+                wp_enqueue_media();
+                ?>
+                    <div class="badge_image_row">
+                        <input type="hidden" name="badge_price_options[<?php echo esc_attr($args['label_for']); ?>]" id="option_image_id" class="regular-text">
+                        <input id="upload_img-btn" type="button" name="upload-btn" class="button-secondary" value="Upload Image">
+                        <div id="logo_container">
+                            <?php 
+                                if ($hasImage) { 
+                                    ?>
+                                        <img class="logo" src="<?php echo $image_url; ?>" />
+                                    <?php 
+                                }
+                            ?>
+                        </div>
+                        <input id="delete_img-btn" type="button" name="delete-btn" class="button-secondary" value="Remove Image" <?php if (!$hasImage) echo 'style="display: none;"'; ?>>
+                    </div>   
+                    
+                    <script defer>
+                        jQuery(document).ready(function($) {
+                            var $el = jQuery( this );
+                            var imgs = localStorage.getItem('Gambar');
+                            $('#option_image_id').val(imgs);
+                            $('#logo_container').empty().append('<img class="logo" src="' + imgs + '" style="max-height: 50px; margin-top: 3px"/>');
+                        })
+                    </script>
+                <?php            
+            }    
+        }
+
         if (!function_exists('pbdge_name_cb')) {
             function pbdge_name_cb( $args ) 
             {
                 $options = get_option('badge_price_options');
                 ?>
-                    <input class="regular-text" placeholder="e.g. Valentine Price" type="text" id="<?php echo esc_attr($args['label_for']); ?>" name="badge_price_options[<?php echo esc_attr($args['label_for']); ?>]" value="<?php echo esc_attr($options[$args['label_for']] ?? ''); ?>">
+                    <div id="badge_text_row">
+                        <input class="regular-text" placeholder="e.g. Valentine Price" type="text" id="<?php echo esc_attr($args['label_for']); ?>" name="badge_price_options[<?php echo esc_attr($args['label_for']); ?>]" value="<?php echo esc_attr($options[$args['label_for']] ?? ''); ?>">
+                    </div>
                 <?php
             }    
         }
+
 
         if (!function_exists('pbdge_color_cb')) {
             function pbdge_color_cb( $args ) 
             {
                 $options = get_option('badge_price_options');
                 ?>
-                    <input class="regular-text" placeholder="e.g. #ffa700 or Yellow" style="width: 5%;" type="color" id="<?php echo esc_attr($args['label_for']); ?>" name="badge_price_options[<?php echo esc_attr($args['label_for']); ?>]" value="<?php echo esc_attr($options[$args['label_for']] ?? ''); ?>">
+                    <div id="badge_text_row">
+                        <input class="regular-text" placeholder="e.g. #ffa700 or Yellow" style="width: 5%;" type="color" id="<?php echo esc_attr($args['label_for']); ?>" name="badge_price_options[<?php echo esc_attr($args['label_for']); ?>]" value="<?php echo esc_attr($options[$args['label_for']] ?? ''); ?>">
+                    </div> 
                 <?php
             }
         }
@@ -277,6 +395,68 @@
                                 $('#tag_select').select2();
                             });
                         </script>
+                <?php
+            }
+        }
+
+        add_action('admin_footer', 'pbdge_media_selector_scripts');
+
+        if (!function_exists('pbdge_media_selector_scripts')) {
+            function pbdge_media_selector_scripts()
+            {
+	            ?>
+                    <script type='text/javascript'>
+                        
+                        jQuery(document).ready(function($) {
+
+                            $("#delete_img-btn").on("click", function(e) {
+                                e.preventDefault();
+                                localStorage.removeItem("Gambar")
+                                $('#logo_container').html("");
+                                $("#delete_img-btn").hide();
+                            });
+
+                            $('#upload_img-btn').on("click", function(e) {
+                                e.preventDefault();
+                                var $el = jQuery( this );
+                                var optionImageFrame = wp.media({ 
+                                    title: $el.data( 'choose' ),
+                                    button: {
+                                        text: $el.data( 'update' )
+                                    },
+                                    states: [
+                                        new wp.media.controller.Library({
+                                            title: $el.data( 'choose' ),
+                                            filterable: 'all',
+                                            // mutiple: true if you want to upload multiple files at once
+                                            multiple: false
+                                        })
+                                    ]           
+                                });
+
+                                optionImageFrame.on('select', function(e){
+                                    // This will return the selected image from the Media Uploader, the result is an object
+                                    var uploaded_image = optionImageFrame.state().get('selection').first();
+                                    // We convert uploaded_image to a JSON object to make accessing it easier
+                                    // Output to the console uploaded_image
+                                    var attachment = uploaded_image.toJSON();
+                                    var image_url = attachment.url;
+                                    var image_id  = attachment.id;
+
+                                    $('#option_image_id').val(image_url);
+
+                                    localStorage.setItem("Gambar", image_url);
+
+                                    if (image_url) {
+                                        $('#logo_container').empty().append('<img class="logo" src="' + image_url + '" style="max-height: 50px; margin-top: 3px"/>');         
+                                    }
+                            
+                                    $("#delete_img-btn").show();
+                                });
+                                optionImageFrame.open();
+                            });
+                        });
+                    </script>
                 <?php
             }
         }
@@ -333,3 +513,4 @@
             }
         }
 ?>
+
