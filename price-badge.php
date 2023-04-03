@@ -8,7 +8,7 @@
  * Domain Path:         /languages
  * Version:             1.0.1
  * Requires at least:   5.5
- * Requires PHP:        7.3
+ * Requires PHP:        7.1
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  */
