@@ -44,6 +44,9 @@
                     {
                         if( array_intersect($options["prefix_field_tag"], $product->get_tag_ids()) ) {      
                             $text_to_add_after_price  = ' <sup class="text-red" style="color:'.$options["prefix_field_color"].'">'.$options["prefix_field_name"].'</sup>' ; 
+                            if ($options["prefix_field_type"] == 'images' && $image_url == null) {
+                                return $price . $text_to_add_after_price;
+                            }
                             if ($options["prefix_field_type"] == 'images') {
                                 return '
                                 <div class="container">
@@ -63,8 +66,7 @@
                                 ';
                             } elseif($options["prefix_field_type"] == 'textbox') {
                                 return $price . $text_to_add_after_price;
-                            }
-                        } else {
+                            } 
                             return $price;
                         }  
                     } else {
@@ -272,15 +274,32 @@
                 $options = get_option('badge_price_options');
                 $type = $options[$args['label_for']] ?? '';
                 ?>
-                    <select name="badge_price_options[<?php echo esc_attr($args['label_for'] ?? ''); ?>]" id="type" style="width:220px;">
+                    <select name="badge_price_options[<?php echo esc_attr($args['label_for'] ?? ''); ?>]" id="type">
                         <option>-- Choose Badge Type First --</option>
                         <option name="images" value="images" <?php if ( $type  == 'images') { echo 'selected="selected"'; } ?>>Image</option>
                         <option name="textbox" value="textbox" <?php if ( $type  == 'textbox') { echo 'selected="selected"'; } ?>>Text</option>
                     </select> 
                     <script>
-                        jQuery(document).ready(function($) {
+                        jQuery(document).ready(function($) {                      
+                            var x = document.getElementById('type').value
+
                             $('.badge_image_row').hide();
                             $('.badge_text_row').hide();
+
+                            if (x == "images") {
+                                $('.badge_image_row').show();
+                            }
+                            else if (x == "images") {
+                                $('.badge_text_row').hide();
+                            }
+
+                            if (x == "textbox") {
+                                $('.badge_text_row').show();
+                            }
+                            else if (x == "textbox") {
+                                $('.badge_image_row').hide();
+                            }
+
                             $('#type').change(function(){
                                 if($('#type').val() == 'images') {
                                     $('.badge_image_row').show(); 
@@ -468,6 +487,7 @@
             { 
                 wp_enqueue_style('select2-custom-css', plugins_url('/assets/select2/css/select2.min.css', __FILE__), array());
                 wp_enqueue_script('select2-custom-js', plugins_url('/assets/select2/js/select2.min.js', __FILE__), array('jquery'));
+                wp_enqueue_style('field-css', plugins_url('/assets/css/field.css', __FILE__), array());
             }
         }
 
