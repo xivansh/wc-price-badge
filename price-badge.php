@@ -6,7 +6,7 @@
  * Author:              IvanLux
  * Text Domain:         price-badge
  * Domain Path:         /languages
- * Version:             1.0.1
+ * Version:             1.0.2
  * Requires at least:   5.5
  * Requires PHP:        7.1
  * License: GPLv2 or later
@@ -322,39 +322,29 @@
             function pbdge_image_cb( $args ) 
             {
                 $options = get_option('badge_price_options');
-                $image_id       = esc_attr__( $args['label_for']);
+                $image_url       = esc_attr__( $options['prefix_field_image'] );
                 $hasImage       = false;
-                $image          = wp_get_attachment_image_src( $image_id );
-                $image_url      = $image;
-
-                if (!is_null($image_id) && $image_id !== "" && $image_id > 0) {
+                if (!is_null($image_url) && $image_url !== "" && $image_url > 0) {
                     $hasImage   = true;
                 }
                 wp_enqueue_media();
                 ?>
                     <div class="badge_image_row">
-                        <input type="hidden" name="badge_price_options[<?php echo esc_attr($args['label_for']); ?>]" id="option_image_id" class="regular-text">
+                        <input type="hidden" name="badge_price_options[<?php echo esc_attr($args['label_for']); ?>]" id="option_image_id" class="regular-text" value="<?php echo $image_url; ?>">
                         <input id="upload_img-btn" type="button" name="upload-btn" class="button-secondary" value="Upload Image">
+                        
                         <div id="logo_container">
                             <?php 
                                 if ($hasImage) { 
                                     ?>
-                                        <img class="logo" src="<?php echo $image_url; ?>" />
+                                        <img class="logo" src="<?php echo $image_url; ?>" style="max-height: 50px; margin-top: 5px; margin-bottom: 5px" />
                                     <?php 
                                 }
-                            ?>
-                        </div>
-                        <input id="delete_img-btn" type="button" name="delete-btn" class="button-secondary" value="Remove Image" <?php if (!$hasImage) echo 'style="display: none;"'; ?>>
+
+                            ?>                       
+                    </div>
+                        <input id="delete_img-btn" type="button" name="delete-btn" class="button-secondary" value="Remove Image" <?php if (!$hasImage) echo 'style="display: none"'; ?>>
                     </div>   
-                    
-                    <script defer>
-                        jQuery(document).ready(function($) {
-                            var $el = jQuery( this );
-                            var imgs = localStorage.getItem('Gambar');
-                            $('#option_image_id').val(imgs);
-                            $('#logo_container').empty().append('<img class="logo" src="' + imgs + '" style="max-height: 50px; margin-top: 3px"/>');
-                        })
-                    </script>
                 <?php            
             }    
         }
@@ -425,13 +415,12 @@
             {
 	            ?>
                     <script type='text/javascript'>
-                        
                         jQuery(document).ready(function($) {
 
                             $("#delete_img-btn").on("click", function(e) {
                                 e.preventDefault();
-                                localStorage.removeItem("Gambar")
                                 $('#logo_container').html("");
+                                $('#option_image_id').val("");
                                 $("#delete_img-btn").hide();
                             });
 
@@ -464,12 +453,12 @@
 
                                     $('#option_image_id').val(image_url);
 
-                                    localStorage.setItem("Gambar", image_url);
+                                    // localStorage.setItem("Gambar", image_url);
 
                                     if (image_url) {
-                                        $('#logo_container').empty().append('<img class="logo" src="' + image_url + '" style="max-height: 50px; margin-top: 3px"/>');         
+                                        $('#logo_container').empty().append('<img class="logo" src="' + image_url + '" style="max-height: 50px; margin-top: 5px; margin-bottom: 5px"/>');         
                                     }
-                            
+                                    
                                     $("#delete_img-btn").show();
                                 });
                                 optionImageFrame.open();
