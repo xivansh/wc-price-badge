@@ -4,7 +4,7 @@ Donate link: https://ivans.my.id
 Tags: pricebadge
 Requires at least: 1.0.0
 Tested up to: 6.1
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 Requires PHP: 7.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -20,5 +20,4 @@ Isi Form
 - Tag Product > Untuk mimilih Tag yang diinginkan, dan lalu akan tampil Price Badge 
 
 New Update : 
-Add new select type badge, Image or Text....
-
+Add new select type badge, Image or Text.

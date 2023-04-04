@@ -7,7 +7,7 @@
  * Author URI:          https://ivans.my.id
  * Text Domain:         price-badge
  * Domain Path:         /languages
- * Version:             1.0.2
+ * Version:             1.0.3
  * Requires at least:   5.5
  * Requires PHP:        7.1
  * License: GPLv2 or later
