@@ -4,6 +4,7 @@
  * Plugin URI:          https://ivans.my.id
  * Description:         Add Badge Name after price
  * Author:              IvanLux
+ * Author URI:          https://ivans.my.id
  * Text Domain:         price-badge
  * Domain Path:         /languages
  * Version:             1.0.2
